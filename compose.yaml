@@ -1,0 +1,35 @@
+services:
+  web-server:
+    image: nginx
+    container_name: server
+    ports:
+      - 8080:80
+    networks:
+      firewall-lab:
+        ipv4_address: 192.168.100.249
+  firewall:
+    image: ubuntu
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./scripts:$HOME/scripts
+    networks:
+      firewall-lab:
+        ipv4_address: 192.168.100.250
+    working_dir: $HOME/scripts
+  client:
+    image: ubuntu
+    networks:
+      firewall-lab:
+        ipv4_address: 192.168.100.251
+networks:
+  firewall-lab:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "192.168.100.248/6"
+          gateway: 192.168.100.252
+
+# TODO:
+# - Create network, investigate about adding new network interface (firewall)
+# - Create web server, using some existing one
