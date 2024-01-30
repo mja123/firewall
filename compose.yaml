@@ -8,7 +8,7 @@ services:
       firewall-lab:
         ipv4_address: 192.168.100.249
   firewall:
-    build: ./ubuntu/
+    build: ./ubuntu
     container_name: firewall-router
     command: bash
     dns: 8.8.8.8
@@ -16,14 +16,16 @@ services:
     cap_add:
       - NET_ADMIN
     volumes:
-      - ./scripts:/root/scripts
+      - ./scripts/firewall:/root/scripts
     networks:
       firewall-lab:
         ipv4_address: 192.168.100.250
     working_dir: /root/scripts
   client:
-    build: ./ubuntu/
+    build: ./ubuntu
     container_name: client
+    volumes:
+      - ./scripts/client:/root/scripts
     cap_add:
       - NET_ADMIN
     command: bash
@@ -38,3 +40,11 @@ networks:
     ipam:
       config:
         - subnet: 192.168.100.248/6
+
+# CLIENT:
+# Every time that we want to curl server, we'll redirect traffic to firewall
+# - iptables -t nat -A OUTPUT -p tcp --dport 80 -d 192.168.100.249 -j DNAT --to 192.168.100.250
+# FIREWALL:
+# When firewall received client curl to server, redirects to server
+# - iptables -t nat -A PREROUTING -p tcp --dport 80 -d 192.168.100.250 -j DNAT --to 192.168.100.249
+

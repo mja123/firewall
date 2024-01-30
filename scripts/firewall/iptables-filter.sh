@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 # Clean standard filter rules
 iptables -F INPUT 
 iptables -F OUTPUT
@@ -15,7 +17,7 @@ iptables -P INPUT DROP
 iptables -P OUTPUT DROP
 iptables -P FORWARD DROP
 
-# Allowing packages for already stablished connections
+# Allowing packages for already established connections
 # This makes filter table stateful, so we don't need to manage responses rules
 iptables -A INPUT -m state --state ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -m state --state ESTABLISHED -j ACCEPT
