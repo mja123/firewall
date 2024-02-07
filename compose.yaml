@@ -40,11 +40,3 @@ networks:
     ipam:
       config:
         - subnet: 192.168.100.248/6
-
-# CLIENT:
-# Every time that we want to curl server, we'll redirect traffic to firewall
-# - iptables -t nat -A OUTPUT -p tcp --dport 80 -d 192.168.100.249 -j DNAT --to 192.168.100.250
-# FIREWALL:
-# When firewall received client curl to server, redirects to server
-# - iptables -t nat -A PREROUTING -p tcp --dport 80 -d 192.168.100.250 -j DNAT --to 192.168.100.249
-
